@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "1770228691435",
+    "userId": "1770228581937",
+    "username": "SIDHU",
+    "gameId": "game_29503811",
+    "betType": "big_small",
+    "betOption": "big",
+    "betAmount": 10,
+    "placedAt": "2026-02-04T18:11:31.436Z"
+  },
+  {
+    "_id": "1770228728772",
+    "userId": "1770228581937",
+    "username": "SIDHU",
+    "gameId": "game_29503812",
+    "betType": "big_small",
+    "betOption": "small",
+    "betAmount": 10,
+    "placedAt": "2026-02-04T18:12:08.772Z"
+  },
+  {
+    "_id": "1770228771397",
+    "userId": "1770228581937",
+    "username": "SIDHU",
+    "gameId": "game_29503812",
+    "betType": "big_small",
+    "betOption": "big",
+    "betAmount": 500,
+    "placedAt": "2026-02-04T18:12:51.397Z"
+  }
+]

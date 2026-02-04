@@ -1,0 +1,12 @@
+[
+  {
+    "_id": "DEP_1770228650882",
+    "userId": "1770228581937",
+    "username": "SIDHU",
+    "amount": 1000,
+    "upiId": "6204924476@axl",
+    "status": "verified",
+    "createdAt": "2026-02-04T18:10:50.882Z",
+    "processedAt": "2026-02-04T18:11:03.757Z"
+  }
+]

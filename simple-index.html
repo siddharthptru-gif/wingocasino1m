@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wingo Casino - Play Wingo 1 Minute Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #balance {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 180px);
+        }
+
+        .section {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .game-info {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .timer h3 {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item span:first-child {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stat-item span:last-child {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .betting-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .betting-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .betting-section h3 {
+            margin-bottom: 1rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .color-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 1rem;
+            border-radius: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .color-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .color-option.selected {
+            box-shadow: 0 0 0 3px #667eea;
+            transform: scale(1.05);
+        }
+
+        .color-box {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 0.5rem;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+
+        .red { background-color: red; }
+        .blue { background-color: blue; }
+        .green { background-color: green; }
+        .yellow { background-color: yellow; }
+        .purple { background-color: purple; }
+        .orange { background-color: orange; }
+
+        .big-small-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .big-small-option {
+            text-align: center;
+            cursor: pointer;
+            padding: 1rem;
+            border-radius: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .big-small-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .big-small-option.selected {
+            box-shadow: 0 0 0 3px #667eea;
+            transform: scale(1.05);
+        }
+
+        .option-box {
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .big { background-color: #ff4757; }
+        .small { background-color: #2ed573; }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.5rem;
+        }
+
+        .number-option {
+            padding: 0.5rem;
+            text-align: center;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .number-option:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .number-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .bet-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .bet-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .bet-input label {
+            font-weight: bold;
+        }
+
+        .bet-input input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 120px;
+        }
+
+        .selected-bet {
+            flex: 1;
+            text-align: center;
+        }
+
+        .financial-operation {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .financial-operation h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .deposit-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .upi-id {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 0.5rem;
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 5px;
+            margin: 0.5rem 0;
+        }
+
+        .financial-operation input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .nav-menu {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .nav-menu .container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn.active {
+            background: #5a6fd8;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: #5a6fd8;
+        }
+
+        @media (max-width: 768px) {
+            .game-info {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .game-stats {
+                justify-content: center;
+            }
+            
+            .betting-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .color-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .number-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            .bet-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-menu .container {
+                flex-wrap: wrap;
+            }
+            
+            .nav-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <h1>Wingo Casino</h1>
+                <div class="user-info">
+                    <span id="balance">Balance: ₹1000.00</span>
+                    <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Login/Register Section -->
+            <section id="authSection" class="section">
+                <div class="auth-container">
+                    <div class="auth-tabs">
+                        <button id="loginTab" class="tab-btn active">Login</button>
+                        <button id="registerTab" class="tab-btn">Register</button>
+                    </div>
+                    
+                    <div id="loginForm" class="auth-form">
+                        <h2>Login to Your Account</h2>
+                        <form id="login">
+                            <input type="text" id="loginUsername" placeholder="Username" required>
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    </div>
+                    
+                    <div id="registerForm" class="auth-form hidden">
+                        <h2>Create New Account</h2>
+                        <form id="register">
+                            <input type="text" id="regUsername" placeholder="Username" required>
+                            <input type="email" id="regEmail" placeholder="Email" required>
+                            <input type="password" id="regPassword" placeholder="Password" required>
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Game Section -->
+            <section id="gameSection" class="section hidden">
+                <div class="container">
+                    <!-- Game Info -->
+                    <div class="game-info">
+                        <div class="timer">
+                            <h3>Next Game in: <span id="countdown">60</span>s</h3>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat-item">
+                                <span>Period:</span>
+                                <span id="currentPeriod">1</span>
+                            </div>
+                            <div class="stat-item">
+                                <span>Last Result:</span>
+                                <span id="lastResult">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Betting Area -->
+                    <div class="betting-area">
+                        <!-- Color Betting -->
+                        <div class="betting-section">
+                            <h3>Color Trading</h3>
+                            <div class="color-grid">
+                                <div class="color-option" data-color="red" data-value="red">
+                                    <div class="color-box red"></div>
+                                    <span>Red</span>
+                                </div>
+                                <div class="color-option" data-color="blue" data-value="blue">
+                                    <div class="color-box blue"></div>
+                                    <span>Blue</span>
+                                </div>
+                                <div class="color-option" data-color="green" data-value="green">
+                                    <div class="color-box green"></div>
+                                    <span>Green</span>
+                                </div>
+                                <div class="color-option" data-color="yellow" data-value="yellow">
+                                    <div class="color-box yellow"></div>
+                                    <span>Yellow</span>
+                                </div>
+                                <div class="color-option" data-color="purple" data-value="purple">
+                                    <div class="color-box purple"></div>
+                                    <span>Purple</span>
+                                </div>
+                                <div class="color-option" data-color="orange" data-value="orange">
+                                    <div class="color-box orange"></div>
+                                    <span>Orange</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Big/Small Betting -->
+                        <div class="betting-section">
+                            <h3>Big/Small</h3>
+                            <div class="big-small-grid">
+                                <div class="big-small-option" data-type="big_small" data-value="big">
+                                    <div class="option-box big">BIG</div>
+                                </div>
+                                <div class="big-small-option" data-type="big_small" data-value="small">
+                                    <div class="option-box small">SMALL</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Number Betting -->
+                        <div class="betting-section">
+                            <h3>Numbers (0-99)</h3>
+                            <div class="number-grid" id="numberGrid">
+                                <!-- Numbers will be generated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Betting Controls -->
+                    <div class="bet-controls">
+                        <div class="bet-input">
+                            <label for="betAmount">Bet Amount (₹):</label>
+                            <input type="number" id="betAmount" min="10" value="10" step="10">
+                        </div>
+                        <button id="placeBetBtn" class="btn btn-primary">Place Bet</button>
+                        <div class="selected-bet">
+                            <p>Selected: <span id="selectedBetDisplay">None</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deposit/Withdrawal Section -->
+            <section id="financialSection" class="section hidden">
+                <div class="container">
+                    <h2>Financial Operations</h2>
+                    
+                    <!-- Deposit Section -->
+                    <div class="financial-operation">
+                        <h3>Deposit Funds</h3>
+                        <div class="deposit-info">
+                            <p>To deposit funds, send money to our UPI ID:</p>
+                            <div class="upi-id">9304511727@ybl</div>
+                            <p>After sending, submit your deposit request below for verification.</p>
+                        </div>
+                        <form id="depositRequest">
+                            <input type="number" id="depositAmount" placeholder="Amount to deposit" min="10" required>
+                            <input type="text" id="depositUpiId" placeholder="Your UPI ID used for deposit" required>
+                            <button type="submit" class="btn btn-success">Submit Deposit Request</button>
+                        </form>
+                    </div>
+
+                    <!-- Withdrawal Section -->
+                    <div class="financial-operation">
+                        <h3>Withdraw Funds</h3>
+                        <p>Minimum withdrawal amount: ₹100</p>
+                        <form id="withdrawalRequest">
+                            <input type="number" id="withdrawalAmount" placeholder="Amount to withdraw (min ₹100)" min="100" required>
+                            <input type="text" id="withdrawalUpiId" placeholder="UPI ID for withdrawal" required>
+                            <button type="submit" class="btn btn-warning">Submit Withdrawal Request</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="nav-menu">
+            <div class="container">
+                <button id="gameNav" class="nav-btn active">Game</button>
+                <button id="depositNav" class="nav-btn">Deposit/Withdraw</button>
+                <button id="logoutNav" class="nav-btn">Logout</button>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Simple Casino Application Logic
+        class SimpleCasino {
+            constructor() {
+                this.users = JSON.parse(localStorage.getItem('casinoUsers')) || [];
+                this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+                this.selectedBet = null;
+                this.betAmount = 10;
+                this.countdown = 60;
+                this.currentPeriod = 1;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.generateNumberGrid();
+                this.startCountdown();
+                this.checkAuthStatus();
+            }
+
+            setupEventListeners() {
+                // Tab switching
+                document.getElementById('loginTab').addEventListener('click', () => this.switchTab('login'));
+                document.getElementById('registerTab').addEventListener('click', () => this.switchTab('register'));
+
+                // Form submissions
+                document.getElementById('login').addEventListener('submit', (e) => this.handleLogin(e));
+                document.getElementById('register').addEventListener('submit', (e) => this.handleRegister(e));
+                document.getElementById('depositRequest').addEventListener('submit', (e) => this.handleDeposit(e));
+                document.getElementById('withdrawalRequest').addEventListener('submit', (e) => this.handleWithdrawal(e));
+
+                // Betting options
+                document.querySelectorAll('.color-option').forEach(option => {
+                    option.addEventListener('click', (e) => this.selectColor(e));
+                });
+
+                document.querySelectorAll('.big-small-option').forEach(option => {
+                    option.addEventListener('click', (e) => this.selectBigSmall(e));
+                });
+
+                // Bet amount and control
+                document.getElementById('betAmount').addEventListener('change', (e) => {
+                    this.betAmount = parseInt(e.target.value) || 10;
+                });
+                document.getElementById('placeBetBtn').addEventListener('click', () => this.placeBet());
+
+                // Navigation
+                document.getElementById('gameNav').addEventListener('click', () => this.showGameView());
+                document.getElementById('depositNav').addEventListener('click', () => this.showFinancialView());
+                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+                document.getElementById('logoutNav').addEventListener('click', () => this.logout());
+            }
+
+            switchTab(activeTab) {
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(`${activeTab}Tab`).classList.add('active');
+
+                document.querySelectorAll('.auth-form').forEach(form => {
+                    form.classList.add('hidden');
+                });
+                document.getElementById(`${activeTab}Form`).classList.remove('hidden');
+            }
+
+            handleLogin(e) {
+                e.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const user = this.users.find(u => u.username === username && u.password === password);
+                if (user) {
+                    this.currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    alert('Login successful!');
+                    this.showGameView();
+                } else {
+                    alert('Invalid credentials');
+                }
+            }
+
+            handleRegister(e) {
+                e.preventDefault();
+                const username = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const password = document.getElementById('regPassword').value;
+
+                if (this.users.some(u => u.username === username || u.email === email)) {
+                    alert('User already exists');
+                    return;
+                }
+
+                const newUser = {
+                    id: Date.now(),
+                    username,
+                    email,
+                    password,
+                    balance: 1000, // Starting balance
+                    createdAt: new Date()
+                };
+
+                this.users.push(newUser);
+                localStorage.setItem('casinoUsers', JSON.stringify(this.users));
+                alert('Registration successful! Please log in.');
+                this.switchTab('login');
+            }
+
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('currentUser');
+                this.showAuthView();
+                alert('Logged out successfully');
+            }
+
+            checkAuthStatus() {
+                if (this.currentUser) {
+                    this.showGameView();
+                } else {
+                    this.showAuthView();
+                }
+            }
+
+            showAuthView() {
+                document.getElementById('authSection').classList.remove('hidden');
+                document.getElementById('gameSection').classList.add('hidden');
+                document.getElementById('financialSection').classList.add('hidden');
+            }
+
+            showGameView() {
+                if (!this.currentUser) {
+                    this.showAuthView();
+                    return;
+                }
+                
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('gameSection').classList.remove('hidden');
+                document.getElementById('financialSection').classList.add('hidden');
+                document.getElementById('balance').textContent = `Balance: ₹${this.currentUser.balance.toFixed(2)}`;
+            }
+
+            showFinancialView() {
+                if (!this.currentUser) {
+                    this.showAuthView();
+                    return;
+                }
+                
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('gameSection').classList.add('hidden');
+                document.getElementById('financialSection').classList.remove('hidden');
+            }
+
+            generateNumberGrid() {
+                const grid = document.getElementById('numberGrid');
+                grid.innerHTML = '';
+                
+                for (let i = 0; i <= 99; i++) {
+                    const numberElement = document.createElement('div');
+                    numberElement.className = 'number-option';
+                    numberElement.textContent = i.toString().padStart(2, '0');
+                    numberElement.dataset.type = 'number';
+                    numberElement.dataset.value = i;
+                    numberElement.addEventListener('click', (e) => this.selectNumber(e));
+                    grid.appendChild(numberElement);
+                }
+            }
+
+            selectColor(e) {
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                e.currentTarget.classList.add('selected');
+                
+                this.selectedBet = {
+                    type: 'color',
+                    value: e.currentTarget.dataset.value
+                };
+                this.updateSelectedBetDisplay();
+            }
+
+            selectBigSmall(e) {
+                document.querySelectorAll('.big-small-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                e.currentTarget.classList.add('selected');
+                
+                this.selectedBet = {
+                    type: 'big_small',
+                    value: e.currentTarget.dataset.value
+                };
+                this.updateSelectedBetDisplay();
+            }
+
+            selectNumber(e) {
+                document.querySelectorAll('.number-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                e.currentTarget.classList.add('selected');
+                
+                this.selectedBet = {
+                    type: 'number',
+                    value: e.currentTarget.dataset.value
+                };
+                this.updateSelectedBetDisplay();
+            }
+
+            updateSelectedBetDisplay() {
+                const display = document.getElementById('selectedBetDisplay');
+                if (this.selectedBet) {
+                    display.textContent = `${this.selectedBet.type}: ${this.selectedBet.value}`;
+                } else {
+                    display.textContent = 'None';
+                }
+            }
+
+            placeBet() {
+                if (!this.currentUser) {
+                    alert('Please log in first');
+                    return;
+                }
+
+                if (!this.selectedBet) {
+                    alert('Please select a bet option first');
+                    return;
+                }
+
+                if (this.betAmount < 10) {
+                    alert('Minimum bet amount is ₹10');
+                    return;
+                }
+
+                if (this.currentUser.balance < this.betAmount) {
+                    alert('Insufficient balance');
+                    return;
+                }
+
+                // Send bet info to admin panel
+                window.postMessage({
+                    type: 'new-bet',
+                    username: this.currentUser.username,
+                    betType: this.selectedBet.type,
+                    betOption: this.selectedBet.value,
+                    betAmount: this.betAmount
+                }, '*');
+
+                // Deduct bet amount
+                this.currentUser.balance -= this.betAmount;
+                this.updateUserInStorage();
+                document.getElementById('balance').textContent = `Balance: ₹${this.currentUser.balance.toFixed(2)}`;
+                
+                // Simulate bet result
+                setTimeout(() => {
+                    const won = Math.random() > 0.5; // 50% chance to win
+                    if (won) {
+                        const payout = this.betAmount * 2; // 2x payout
+                        this.currentUser.balance += payout;
+                        this.updateUserInStorage();
+                        document.getElementById('balance').textContent = `Balance: ₹${this.currentUser.balance.toFixed(2)}`;
+                        alert(`Congratulations! You won ₹${payout}!`);
+                    } else {
+                        alert(`Sorry, you lost ₹${this.betAmount}. Better luck next time!`);
+                    }
+                }, 1000);
+
+                alert(`Bet placed: ${this.selectedBet.type} ${this.selectedBet.value} for ₹${this.betAmount}`);
+                this.resetSelection();
+            }
+
+            resetSelection() {
+                document.querySelectorAll('.color-option, .big-small-option, .number-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.selectedBet = null;
+                this.updateSelectedBetDisplay();
+            }
+
+            handleDeposit(e) {
+                e.preventDefault();
+                const amount = parseFloat(document.getElementById('depositAmount').value);
+                const upiId = document.getElementById('depositUpiId').value;
+
+                if (amount < 10) {
+                    alert('Minimum deposit is ₹10');
+                    return;
+                }
+
+                // Send message to admin panel
+                window.postMessage({
+                    type: 'deposit-request',
+                    username: this.currentUser.username,
+                    amount: amount,
+                    upiId: upiId
+                }, '*');
+
+                alert(`Deposit request submitted for ₹${amount} via UPI ${upiId}. Please wait for admin verification.`);
+                document.getElementById('depositRequest').reset();
+            }
+
+            handleWithdrawal(e) {
+                e.preventDefault();
+                const amount = parseFloat(document.getElementById('withdrawalAmount').value);
+                const upiId = document.getElementById('withdrawalUpiId').value;
+
+                if (amount < 100) {
+                    alert('Minimum withdrawal is ₹100');
+                    return;
+                }
+
+                if (this.currentUser.balance < amount) {
+                    alert('Insufficient balance');
+                    return;
+                }
+
+                // Send message to admin panel
+                window.postMessage({
+                    type: 'withdrawal-request',
+                    username: this.currentUser.username,
+                    amount: amount,
+                    upiId: upiId
+                }, '*');
+
+                alert(`Withdrawal request submitted for ₹${amount} to UPI ${upiId}. Please wait for admin processing.`);
+                document.getElementById('withdrawalRequest').reset();
+            }
+
+            startCountdown() {
+                setInterval(() => {
+                    if (this.countdown > 0) {
+                        this.countdown--;
+                        document.getElementById('countdown').textContent = this.countdown;
+                    } else {
+                        this.startNewRound();
+                    }
+                }, 1000);
+            }
+
+            startNewRound() {
+                this.currentPeriod++;
+                document.getElementById('currentPeriod').textContent = this.currentPeriod;
+                this.countdown = 60;
+                document.getElementById('countdown').textContent = this.countdown;
+                
+                // Generate random result
+                this.simulateGameResult();
+            }
+
+            simulateGameResult() {
+                const colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
+                const winningColor = colors[Math.floor(Math.random() * colors.length)];
+                const winningNumber = Math.floor(Math.random() * 100);
+                const bigSmallResult = winningNumber >= 50 ? 'big' : 'small';
+                
+                document.getElementById('lastResult').textContent = 
+                    `#${winningNumber} ${winningColor} ${bigSmallResult}`;
+            }
+
+            updateUserInStorage() {
+                const userIndex = this.users.findIndex(u => u.id === this.currentUser.id);
+                if (userIndex !== -1) {
+                    this.users[userIndex] = this.currentUser;
+                    localStorage.setItem('casinoUsers', JSON.stringify(this.users));
+                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                }
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            window.casino = new SimpleCasino();
+        });
+    </script>
+</body>
+</html>

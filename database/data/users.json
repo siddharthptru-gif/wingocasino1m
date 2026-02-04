@@ -1,0 +1,11 @@
+[
+  {
+    "_id": "1770228581937",
+    "username": "SIDHU",
+    "email": "workpromax646@gmail.com",
+    "password": "$2a$10$R7B2OZG9OQX08Kfq8YyJLO.QmSYf5xUg13CMAWgR7pLxa2JvvHFQu",
+    "balance": 1480,
+    "isAdmin": false,
+    "createdAt": "2026-02-04T18:09:41.937Z"
+  }
+]

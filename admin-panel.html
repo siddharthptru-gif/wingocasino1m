@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wingo Casino - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: #1a252f;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .admin-login {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a6fd8;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .admin-nav {
+            background: #1a252f;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-nav-btn {
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .admin-nav-btn.active {
+            background: #5a6fd8;
+            font-weight: bold;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .dashboard-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .admin-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .admin-section h2 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        .status-pending { color: #ff9800; }
+        .status-completed { color: #4CAF50; }
+        .status-rejected { color: #f44336; }
+        .status-approved { color: #2196F3; }
+
+        .game-control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .control-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .control-item input, .control-item select {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .realtime-bets {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .bet-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div id="adminApp">
+        <!-- Admin Login -->
+        <div id="adminLogin" class="admin-login">
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUsername">Username:</label>
+                    <input type="text" id="adminUsername" value="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password:</label>
+                    <input type="password" id="adminPassword" value="admin123" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login as Admin</button>
+            </form>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="hidden">
+            <div class="admin-header">
+                <h1>Wingo Casino - Admin Dashboard</h1>
+                <p>Welcome, Administrator</p>
+            </div>
+
+            <!-- Admin Navigation -->
+            <div class="admin-nav">
+                <button id="dashboardNav" class="admin-nav-btn active">Dashboard</button>
+                <button id="usersNav" class="admin-nav-btn">Users</button>
+                <button id="depositsNav" class="admin-nav-btn">Deposits</button>
+                <button id="withdrawalsNav" class="admin-nav-btn">Withdrawals</button>
+                <button id="betsNav" class="admin-nav-btn">Bets</button>
+                <button id="gameControlNav" class="admin-nav-btn">Game Control</button>
+                <button id="logoutAdminBtn" class="admin-nav-btn btn-danger">Logout</button>
+            </div>
+
+            <!-- Dashboard View -->
+            <div id="dashboardView">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Total Users</h3>
+                        <div class="value" id="totalUsers">0</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Deposits</h3>
+                        <div class="value" id="totalDeposits">₹0</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Total Withdrawals</h3>
+                        <div class="value" id="totalWithdrawals">₹0</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Current Period</h3>
+                        <div class="value" id="currentPeriod">-</div>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h2>Recent Activities</h2>
+                    <div id="recentActivities">
+                        <p>No recent activities</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users View -->
+            <div id="usersView" class="hidden">
+                <div class="admin-section">
+                    <h2>Manage Users</h2>
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Balance</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Data will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Deposits View -->
+            <div id="depositsView" class="hidden">
+                <div class="admin-section">
+                    <h2>Deposit Requests</h2>
+                    <table id="depositsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>UPI ID</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="depositsTableBody">
+                            <!-- Data will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Withdrawals View -->
+            <div id="withdrawalsView" class="hidden">
+                <div class="admin-section">
+                    <h2>Withdrawal Requests</h2>
+                    <table id="withdrawalsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>UPI ID</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="withdrawalsTableBody">
+                            <!-- Data will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bets View -->
+            <div id="betsView" class="hidden">
+                <div class="admin-section">
+                    <h2>Real-time Bets</h2>
+                    <div class="realtime-bets">
+                        <div id="betsList">
+                            <!-- Bet data will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Control View -->
+            <div id="gameControlView" class="hidden">
+                <div class="admin-section">
+                    <h2>Game Control Panel</h2>
+                    <p>Control the current game period and results</p>
+                    
+                    <div class="game-control-panel">
+                        <div class="control-item">
+                            <h3>Current Period Status</h3>
+                            <p>Period: <span id="controlCurrentPeriod">-</span></p>
+                            <p>Time Left: <span id="controlTimeLeft">60s</span></p>
+                        </div>
+                        
+                        <div class="control-item">
+                            <h3>Force Game Result</h3>
+                            <div class="form-group">
+                                <label for="winningNumber">Winning Number (0-99):</label>
+                                <input type="number" id="winningNumber" min="0" max="99" value="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="winningColor">Winning Color:</label>
+                                <select id="winningColor">
+                                    <option value="red">Red</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="yellow">Yellow</option>
+                                    <option value="purple">Purple</option>
+                                    <option value="orange">Orange</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="bigSmallResult">Big/Small Result:</label>
+                                <select id="bigSmallResult">
+                                    <option value="big">Big</option>
+                                    <option value="small">Small</option>
+                                    <option value="tie">Tie</option>
+                                </select>
+                            </div>
+                            <button id="forceResultBtn" class="btn btn-primary">Force Result</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Panel Logic
+        class AdminPanel {
+            constructor() {
+                this.token = localStorage.getItem('admin_token');
+                this.currentView = 'dashboard';
+                this.depositRequests = JSON.parse(localStorage.getItem('depositRequests')) || [];
+                this.withdrawalRequests = JSON.parse(localStorage.getItem('withdrawalRequests')) || [];
+                this.bets = JSON.parse(localStorage.getItem('bets')) || [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.checkAdminAuth();
+                this.startPeriodTimer();
+            }
+
+            setupEventListeners() {
+                // Admin login
+                document.getElementById('adminLoginForm').addEventListener('submit', (e) => this.handleAdminLogin(e));
+
+                // Navigation
+                document.getElementById('dashboardNav').addEventListener('click', () => this.switchView('dashboard'));
+                document.getElementById('usersNav').addEventListener('click', () => this.switchView('users'));
+                document.getElementById('depositsNav').addEventListener('click', () => this.switchView('deposits'));
+                document.getElementById('withdrawalsNav').addEventListener('click', () => this.switchView('withdrawals'));
+                document.getElementById('betsNav').addEventListener('click', () => this.switchView('bets'));
+                document.getElementById('gameControlNav').addEventListener('click', () => this.switchView('gameControl'));
+                document.getElementById('logoutAdminBtn').addEventListener('click', () => this.adminLogout());
+
+                // Game control
+                document.getElementById('forceResultBtn').addEventListener('click', () => this.forceGameResult());
+            }
+
+            handleAdminLogin(e) {
+                e.preventDefault();
+                const username = document.getElementById('adminUsername').value;
+                const password = document.getElementById('adminPassword').value;
+
+                if (username === 'admin' && password === 'admin123') {
+                    this.token = 'admin_token';
+                    localStorage.setItem('admin_token', this.token);
+                    document.getElementById('adminLogin').classList.add('hidden');
+                    document.getElementById('adminDashboard').classList.remove('hidden');
+                    this.loadDashboardData();
+                } else {
+                    alert('Invalid admin credentials');
+                }
+            }
+
+            adminLogout() {
+                this.token = null;
+                localStorage.removeItem('admin_token');
+                document.getElementById('adminLogin').classList.remove('hidden');
+                document.getElementById('adminDashboard').classList.add('hidden');
+                document.getElementById('adminLoginForm').reset();
+                alert('Logged out from admin panel');
+            }
+
+            checkAdminAuth() {
+                if (this.token) {
+                    document.getElementById('adminLogin').classList.add('hidden');
+                    document.getElementById('adminDashboard').classList.remove('hidden');
+                    this.loadDashboardData();
+                } else {
+                    document.getElementById('adminLogin').classList.remove('hidden');
+                    document.getElementById('adminDashboard').classList.add('hidden');
+                }
+            }
+
+            switchView(viewName) {
+                // Hide all views
+                document.querySelectorAll('#dashboardView, #usersView, #depositsView, #withdrawalsView, #betsView, #gameControlView').forEach(view => {
+                    view.classList.add('hidden');
+                });
+                
+                // Remove active class from all nav buttons
+                document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Show selected view
+                document.getElementById(`${viewName}View`).classList.remove('hidden');
+                document.getElementById(`${viewName}Nav`).classList.add('active');
+                
+                this.currentView = viewName;
+                
+                // Load data for the selected view
+                switch(viewName) {
+                    case 'dashboard':
+                        this.loadDashboardData();
+                        break;
+                    case 'users':
+                        this.loadUsers();
+                        break;
+                    case 'deposits':
+                        this.loadDepositRequests();
+                        break;
+                    case 'withdrawals':
+                        this.loadWithdrawalRequests();
+                        break;
+                    case 'bets':
+                        this.loadBets();
+                        break;
+                    case 'gameControl':
+                        this.loadGameControlData();
+                        break;
+                }
+            }
+
+            loadDashboardData() {
+                const users = JSON.parse(localStorage.getItem('casinoUsers')) || [];
+                document.getElementById('totalUsers').textContent = users.length;
+                
+                const totalDeposits = this.depositRequests.reduce((sum, req) => sum + (req.status === 'verified' ? req.amount : 0), 0);
+                document.getElementById('totalDeposits').textContent = `₹${totalDeposits.toFixed(2)}`;
+                
+                const totalWithdrawals = this.withdrawalRequests.reduce((sum, req) => sum + (req.status === 'processed' ? req.amount : 0), 0);
+                document.getElementById('totalWithdrawals').textContent = `₹${totalWithdrawals.toFixed(2)}`;
+                
+                document.getElementById('currentPeriod').textContent = this.getCurrentPeriod();
+            }
+
+            loadUsers() {
+                const users = JSON.parse(localStorage.getItem('casinoUsers')) || [];
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>₹${user.balance.toFixed(2)}</td>
+                        <td>${new Date(user.createdAt).toLocaleString()}</td>
+                        <td>
+                            <button onclick="adminPanel.editUserBalance('${user.id}', ${user.balance})" class="btn btn-primary btn-action">Edit Balance</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            editUserBalance(userId, currentBalance) {
+                const newBalance = prompt(`Enter new balance for user (current: ₹${currentBalance.toFixed(2)}):`, currentBalance);
+                
+                if (newBalance !== null) {
+                    const parsedBalance = parseFloat(newBalance);
+                    if (isNaN(parsedBalance) || parsedBalance < 0) {
+                        alert('Please enter a valid positive number');
+                        return;
+                    }
+
+                    const users = JSON.parse(localStorage.getItem('casinoUsers')) || [];
+                    const userIndex = users.findIndex(u => u.id == userId);
+                    if (userIndex !== -1) {
+                        users[userIndex].balance = parsedBalance;
+                        localStorage.setItem('casinoUsers', JSON.stringify(users));
+                        alert('User balance updated successfully');
+                        this.loadUsers();
+                    }
+                }
+            }
+
+            loadDepositRequests() {
+                const tbody = document.getElementById('depositsTableBody');
+                tbody.innerHTML = '';
+
+                this.depositRequests.forEach(req => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${req.id}</td>
+                        <td>${req.username}</td>
+                        <td>₹${req.amount.toFixed(2)}</td>
+                        <td>${req.upiId}</td>
+                        <td class="status-${req.status}">${req.status}</td>
+                        <td>${new Date(req.date).toLocaleString()}</td>
+                        <td class="action-buttons">
+                            ${req.status === 'pending' ? 
+                                `<button onclick="adminPanel.verifyDeposit('${req.id}')" class="btn btn-success btn-action">Verify</button>
+                                 <button onclick="adminPanel.rejectDeposit('${req.id}')" class="btn btn-warning btn-action">Reject</button>` : 
+                                `<span>Completed</span>`
+                            }
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            verifyDeposit(requestId) {
+                if (confirm('Are you sure you want to verify this deposit?')) {
+                    const reqIndex = this.depositRequests.findIndex(r => r.id === requestId);
+                    if (reqIndex !== -1) {
+                        this.depositRequests[reqIndex].status = 'verified';
+                        
+                        // Update user balance
+                        const users = JSON.parse(localStorage.getItem('casinoUsers')) || [];
+                        const userIndex = users.findIndex(u => u.username === this.depositRequests[reqIndex].username);
+                        if (userIndex !== -1) {
+                            users[userIndex].balance += this.depositRequests[reqIndex].amount;
+                            localStorage.setItem('casinoUsers', JSON.stringify(users));
+                        }
+                        
+                        localStorage.setItem('depositRequests', JSON.stringify(this.depositRequests));
+                        alert('Deposit verified successfully');
+                        this.loadDepositRequests();
+                    }
+                }
+            }
+
+            rejectDeposit(requestId) {
+                if (confirm('Are you sure you want to reject this deposit?')) {
+                    const reqIndex = this.depositRequests.findIndex(r => r.id === requestId);
+                    if (reqIndex !== -1) {
+                        this.depositRequests[reqIndex].status = 'rejected';
+                        localStorage.setItem('depositRequests', JSON.stringify(this.depositRequests));
+                        alert('Deposit rejected successfully');
+                        this.loadDepositRequests();
+                    }
+                }
+            }
+
+            loadWithdrawalRequests() {
+                const tbody = document.getElementById('withdrawalsTableBody');
+                tbody.innerHTML = '';
+
+                this.withdrawalRequests.forEach(req => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${req.id}</td>
+                        <td>${req.username}</td>
+                        <td>₹${req.amount.toFixed(2)}</td>
+                        <td>${req.upiId}</td>
+                        <td class="status-${req.status}">${req.status}</td>
+                        <td>${new Date(req.date).toLocaleString()}</td>
+                        <td class="action-buttons">
+                            ${req.status === 'pending' ? 
+                                `<button onclick="adminPanel.approveWithdrawal('${req.id}')" class="btn btn-success btn-action">Approve</button>
+                                 <button onclick="adminPanel.rejectWithdrawal('${req.id}')" class="btn btn-warning btn-action">Reject</button>` : 
+                                req.status === 'approved' ?
+                                `<button onclick="adminPanel.processWithdrawal('${req.id}')" class="btn btn-primary btn-action">Process</button>` :
+                                `<span>Completed</span>`
+                            }
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            approveWithdrawal(requestId) {
+                if (confirm('Are you sure you want to approve this withdrawal?')) {
+                    const reqIndex = this.withdrawalRequests.findIndex(r => r.id === requestId);
+                    if (reqIndex !== -1) {
+                        this.withdrawalRequests[reqIndex].status = 'approved';
+                        localStorage.setItem('withdrawalRequests', JSON.stringify(this.withdrawalRequests));
+                        alert('Withdrawal approved successfully');
+                        this.loadWithdrawalRequests();
+                    }
+                }
+            }
+
+            rejectWithdrawal(requestId) {
+                if (confirm('Are you sure you want to reject this withdrawal?')) {
+                    const reqIndex = this.withdrawalRequests.findIndex(r => r.id === requestId);
+                    if (reqIndex !== -1) {
+                        this.withdrawalRequests[reqIndex].status = 'rejected';
+                        localStorage.setItem('withdrawalRequests', JSON.stringify(this.withdrawalRequests));
+                        alert('Withdrawal rejected successfully');
+                        this.loadWithdrawalRequests();
+                    }
+                }
+            }
+
+            processWithdrawal(requestId) {
+                if (confirm('Are you sure you want to process this withdrawal?')) {
+                    const reqIndex = this.withdrawalRequests.findIndex(r => r.id === requestId);
+                    if (reqIndex !== -1) {
+                        // Check if user has sufficient balance
+                        const users = JSON.parse(localStorage.getItem('casinoUsers')) || [];
+                        const user = users.find(u => u.username === this.withdrawalRequests[reqIndex].username);
+                        
+                        if (user && user.balance >= this.withdrawalRequests[reqIndex].amount) {
+                            user.balance -= this.withdrawalRequests[reqIndex].amount;
+                            this.withdrawalRequests[reqIndex].status = 'processed';
+                            localStorage.setItem('casinoUsers', JSON.stringify(users));
+                            localStorage.setItem('withdrawalRequests', JSON.stringify(this.withdrawalRequests));
+                            alert('Withdrawal processed successfully');
+                            this.loadWithdrawalRequests();
+                        } else {
+                            alert('User has insufficient balance');
+                        }
+                    }
+                }
+            }
+
+            loadBets() {
+                const container = document.getElementById('betsList');
+                container.innerHTML = '';
+
+                this.bets.slice(0, 50).forEach(bet => {
+                    const betElement = document.createElement('div');
+                    betElement.className = 'bet-item';
+                    betElement.innerHTML = `
+                        <p><strong>User:</strong> ${bet.username} | 
+                           <strong>Type:</strong> ${bet.betType} | 
+                           <strong>Option:</strong> ${bet.betOption} | 
+                           <strong>Amount:</strong> ₹${bet.betAmount} | 
+                           <strong>Time:</strong> ${new Date(bet.time).toLocaleTimeString()}</p>
+                    `;
+                    container.appendChild(betElement);
+                });
+            }
+
+            loadGameControlData() {
+                document.getElementById('controlCurrentPeriod').textContent = this.getCurrentPeriod();
+                document.getElementById('controlTimeLeft').textContent = `${this.getTimeLeft()}s`;
+            }
+
+            forceGameResult() {
+                const winningNumber = document.getElementById('winningNumber').value;
+                const winningColor = document.getElementById('winningColor').value;
+                const bigSmallResult = document.getElementById('bigSmallResult').value;
+
+                if (!winningNumber || !winningColor || !bigSmallResult) {
+                    alert('Please fill in all game result fields');
+                    return;
+                }
+
+                if (confirm('Are you sure you want to force this game result?')) {
+                    // In a real implementation, this would broadcast the result
+                    alert(`Game result forced: Number ${winningNumber}, Color ${winningColor}, ${bigSmallResult}`);
+                    
+                    // Update the UI
+                    this.loadGameControlData();
+                }
+            }
+
+            getCurrentPeriod() {
+                return Math.floor(Date.now() / 60000);
+            }
+
+            getTimeLeft() {
+                return 60 - new Date().getSeconds();
+            }
+
+            startPeriodTimer() {
+                setInterval(() => {
+                    if (this.currentView === 'gameControl' || this.currentView === 'dashboard') {
+                        document.getElementById('controlCurrentPeriod').textContent = this.getCurrentPeriod();
+                        document.getElementById('controlTimeLeft').textContent = `${this.getTimeLeft()}s`;
+                        document.getElementById('currentPeriod').textContent = this.getCurrentPeriod();
+                    }
+                }, 1000);
+            }
+        }
+
+        // Initialize admin panel when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.adminPanel = new AdminPanel();
+            
+            // Intercept deposit/withdrawal requests from main app
+            const originalPostMessage = window.postMessage;
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'deposit-request') {
+                    const requests = JSON.parse(localStorage.getItem('depositRequests')) || [];
+                    requests.push({
+                        id: 'DEP_' + Date.now(),
+                        username: event.data.username,
+                        amount: event.data.amount,
+                        upiId: event.data.upiId,
+                        status: 'pending',
+                        date: new Date()
+                    });
+                    localStorage.setItem('depositRequests', JSON.stringify(requests));
+                } else if (event.data.type === 'withdrawal-request') {
+                    const requests = JSON.parse(localStorage.getItem('withdrawalRequests')) || [];
+                    requests.push({
+                        id: 'WD_' + Date.now(),
+                        username: event.data.username,
+                        amount: event.data.amount,
+                        upiId: event.data.upiId,
+                        status: 'pending',
+                        date: new Date()
+                    });
+                    localStorage.setItem('withdrawalRequests', JSON.stringify(requests));
+                } else if (event.data.type === 'new-bet') {
+                    const bets = JSON.parse(localStorage.getItem('bets')) || [];
+                    bets.unshift({
+                        username: event.data.username,
+                        betType: event.data.betType,
+                        betOption: event.data.betOption,
+                        betAmount: event.data.betAmount,
+                        time: new Date()
+                    });
+                    if (bets.length > 100) bets.pop(); // Keep only last 100 bets
+                    localStorage.setItem('bets', JSON.stringify(bets));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

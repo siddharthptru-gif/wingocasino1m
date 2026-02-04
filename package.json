@@ -1,0 +1,32 @@
+{
+  "name": "wingo-casino",
+  "version": "1.0.0",
+  "description": "Online casino application with Wingo 1-minute games, color trading, and admin panel",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node server-simple.js",
+    "dev": "node server-simple.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^7.8.8",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "casino",
+    "wingo",
+    "gambling",
+    "online",
+    "game"
+  ],
+  "author": "Casino Developer",
+  "license": "ISC"
+}
