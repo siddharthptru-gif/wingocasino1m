@@ -1,0 +1,7 @@
+node_modules/
+.env
+database/data/*.json
+*.log
+
+# IMPORTANT: Keep balance backup in Git for Render deployment
+!database/balance-backup.json
